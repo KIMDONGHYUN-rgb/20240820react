@@ -11,11 +11,10 @@ import { GetCustomerListResponseDto } from 'src/apis/dto/response/customer';
 import { ResponseDto } from 'src/apis/dto/response';
 import { calculateAge } from 'src/utils';
 import { useNavigate } from 'react-router';
-import { access } from 'fs';
 
 // interface: 고객 리스트 아이템 컴포넌트 Properties //
 interface TableRowProps {
-    customer: Customer
+    customer: Customer;
     getCustomerList: () => void;
 }
 
@@ -30,19 +29,19 @@ function TableRow({ customer, getCustomerList }: TableRowProps) {
 
     // variable: 담당자 여부 //
     const isCharger = signInUser !== null && signInUser.userId === customer.chargerId;
-
-    // function: 네비케이터 함수 //
+    
+    // function: 네비게이터 함수 //
     const navigator = useNavigate();
 
     // function: delete customer response 처리 함수 //
     const deleteCustomerResponse = (responseBody: ResponseDto | null) => {
         const message =
-            !responseBody ? '서버에 문제가 있습니다.' :
+            !responseBody ? '서버에 문제가 있습니다.' : 
             responseBody.code === 'VF' ? '잘못된 접근입니다.' :
             responseBody.code === 'AF' ? '잘못된 접근입니다.' :
-            responseBody.code === 'NC' ? '존재하지 않는 고객입니다.' :
+            responseBody.code === 'NC' ? '존재하지 않는 고객입니다.' : 
             responseBody.code === 'NP' ? '권한이 없습니다.' :
-            responseBody.code === 'DBE' ? '서버에 문제가 있습니다' : '';
+            responseBody.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
 
         const isSuccessed = responseBody !== null && responseBody.code === 'SU';
         if (!isSuccessed) {
@@ -55,8 +54,9 @@ function TableRow({ customer, getCustomerList }: TableRowProps) {
 
     // event handler: 상세 보기 버튼 클릭 이벤트 처리 함수 //
     const onDetailButtonClickHandler = () => {
-        navigator(CS_DETAIL_ABSOLUTE_PATH(customer.customerNumber))
+        navigator(CS_DETAIL_ABSOLUTE_PATH(customer.customerNumber));
     };
+
     // event handler: 수정 버튼 클릭 이벤트 처리 함수 //
     const onUpdateButtonClickHandler = (event: MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
@@ -68,13 +68,13 @@ function TableRow({ customer, getCustomerList }: TableRowProps) {
         event.stopPropagation();
 
         const isConfirm = window.confirm('정말로 삭제하시겠습니까?');
-        if (isConfirm) return;
+        if (!isConfirm) return;
 
         const accessToken = cookies[ACCESS_TOKEN];
         if (!accessToken) return;
-        deleteCustomerRequest(customer.customerNumber, accessToken).then(deleteCustomerResponse)
+        deleteCustomerRequest(customer.customerNumber, accessToken).then(deleteCustomerResponse);
     };
-    
+
     // render: 고객 리스트 아이템 컴포넌트 렌더링 //
     return (
         <div className='tr' onClick={onDetailButtonClickHandler}>
